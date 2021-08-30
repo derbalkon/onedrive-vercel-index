@@ -1,4 +1,9 @@
 {
+<<<<<<< HEAD
   "title": "derbalkon's OneDrive Index",
   "footer": "Made with ❤ by <a href=\"https://github.com/spencerwooo/onedrive-vercel-index\" target=\"_blank\" rel=\"noopener noreferrer\">SpencerWoo</a>."
+=======
+  "title": "Spencer's OneDrive Index",
+  "footer": "Powered by <a class=\"hover:underline\" href=\"https://github.com/spencerwooo/onedrive-vercel-index\" target=\"_blank\" rel=\"noopener noreferrer\">onedrive-vercel-index</a>. Made with ❤ by SpencerWoo."
+>>>>>>> upstream/main
 }
