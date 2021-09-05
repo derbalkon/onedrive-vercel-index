@@ -4,6 +4,7 @@ import { posix as pathPosix } from 'path'
 
 import apiConfig from '../../config/api.json'
 import siteConfig from '../../config/site.json'
+import { compareHashedToken } from '../../utils/tools'
 
 const basePath = pathPosix.resolve('/', apiConfig.base)
 const encodePath = (path: string) => {
@@ -75,11 +76,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const odProtectedToken = await axios.get(token.data['@microsoft.graph.downloadUrl'])
         // console.log(req.headers['od-protected-token'], odProtectedToken.data.trim())
 
-        if (req.headers['od-protected-token'] !== odProtectedToken.data.trim()) {
+        if (!compareHashedToken(req.headers['od-protected-token'] as string, odProtectedToken.data)) {
           res.status(401).json({ error: 'Password required for this folder.' })
           return
         }
-      } catch (error) {
+      } catch (error: any) {
         // Password file not found, fallback to 404
         if (error.response.status === 404) {
           res.status(404).json({ error: "You didn't set a password for your protected folder." })
@@ -91,15 +92,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Handle response from OneDrive API
     const requestUrl = `${apiConfig.driveApi}/root${encodePath(path)}`
-    const { data } = await axios.get(requestUrl, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-      params: {
-        select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
-        expand: 'children(select=@content.downloadUrl,name,lastModifiedDateTime,eTag,size,id,folder,file)',
-      },
-    })
 
+    // Go for file raw download link and query with only temporary link parameter
     if (raw) {
+      const { data } = await axios.get(requestUrl, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: {
+          select: '@microsoft.graph.downloadUrl,folder,file',
+        },
+      })
+
       if ('folder' in data) {
         res.status(400).json({ error: "Folders doesn't have raw download urls." })
         return
@@ -110,6 +112,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
+    // Normal query selecting and expanding every children in current directory
+    const { data } = await axios.get(requestUrl, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      params: {
+        select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
+        expand: 'children(select=@content.downloadUrl,name,lastModifiedDateTime,eTag,size,id,folder,file)',
+      },
+    })
     res.status(200).json({ path, data })
     return
   }

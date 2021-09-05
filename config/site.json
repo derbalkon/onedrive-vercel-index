@@ -8,13 +8,10 @@
     "600"
   ],
   "protectedRoutes": [
-    "/🌞 Private folder/u-need-a-password",
-    "/🥟 Some test files/Protected route"
   ],
-  "contacts": [
-    {
-      "platform": "github",
-      "link": "https://github.com/derbalkon"
-    }
-  ]
+  "contact": {
+    "email": "",
+    "telegram": "",
+    "github": "https://github.com/derbalkon"
+  }
 }
