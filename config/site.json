@@ -1,12 +1,13 @@
 {
   "icon": "/icons/128.png",
   "title": "derbalkon's OneDrive Index",
-  "footer": "Made with ❤ by <a href=\"https://github.com/spencerwooo/onedrive-vercel-index\" target=\"_blank\" rel=\"noopener noreferrer\">SpencerWoo</a>.",
+  "maxItems": 100,
   "googleFont": "Rubik",
   "googleFontWeights": [
     "400",
     "600"
   ],
+  "footer": "Made with ❤ by <a href=\"https://github.com/spencerwooo/onedrive-vercel-index\" target=\"_blank\" rel=\"noopener noreferrer\">SpencerWoo</a>.",
   "protectedRoutes": [
   ],
   "contact": {
