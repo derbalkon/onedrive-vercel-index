@@ -1,6 +1,6 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 const colors = require('tailwindcss/colors')
-const siteConfig = require('./config/site.json')
+const siteConfig = require('./config/site.config')
 
 module.exports = {
   mode: 'jit',
@@ -30,10 +30,15 @@ module.exports = {
       },
       colors: {
         gray: {
-          850: '#2E2E34'
+          850: '#222226'
         }
+      },
+      animation: {
+        'spin-slow': 'spin 5s linear infinite',
       }
     }
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/line-clamp'),
+  ],
 }

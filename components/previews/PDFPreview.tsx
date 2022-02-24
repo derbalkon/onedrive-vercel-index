@@ -1,21 +1,27 @@
-import { FunctionComponent } from 'react'
-
+import { useRouter } from 'next/router'
+import { getBaseUrl } from '../../utils/getBaseUrl'
+import { getStoredToken } from '../../utils/protectedRouteHandler'
 import DownloadButtonGroup from '../DownloadBtnGtoup'
+import { DownloadBtnContainer } from './Containers'
 
-const PDFEmbedPreview: FunctionComponent<{ file: any }> = ({ file }) => {
-  // const url = `/api/proxy?url=${encodeURIComponent(file['@microsoft.graph.downloadUrl'])}&inline=true`
-  const url = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(
-    file['@microsoft.graph.downloadUrl']
-  )}`
+const PDFEmbedPreview: React.FC<{ file: any }> = ({ file }) => {
+  const { asPath } = useRouter()
+  const hashedToken = getStoredToken(asPath)
+
+  // const url = `/api/proxy?url=${encodeURIComponent(...)}&inline=true`
+  const pdfPath = encodeURIComponent(
+    `${getBaseUrl()}/api/raw/?path=${asPath}${hashedToken ? `&odpt=${hashedToken}` : ''}`
+  )
+  const url = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${pdfPath}`
 
   return (
     <div>
-      <div className="w-full rounded overflow-hidden" style={{ height: '90vh' }}>
+      <div className="w-full overflow-hidden rounded" style={{ height: '90vh' }}>
         <iframe src={url} frameBorder="0" width="100%" height="100%"></iframe>
       </div>
-      <div className="border-t-gray-200 dark:border-t-gray-700 border-t p-2 sticky bottom-0 left-0 right-0 z-10 bg-white bg-opacity-80 backdrop-blur-md dark:bg-gray-900">
-        <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
-      </div>
+      <DownloadBtnContainer>
+        <DownloadButtonGroup />
+      </DownloadBtnContainer>
     </div>
   )
 }
